@@ -4,7 +4,7 @@
   "description": "API em NodeJS com Clean Architecture e TDD",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -18,6 +18,7 @@
   "license": "ISC",
   "devDependencies": {
     "husky": "^7.0.0",
+    "jest": "^27.0.6",
     "lint-staged": "^11.1.1",
     "standard": "^16.0.3"
   }

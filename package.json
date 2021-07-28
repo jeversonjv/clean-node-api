@@ -4,7 +4,8 @@
   "description": "API em NodeJS com Clean Architecture e TDD",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watch-all",
+    "test:staged": "jest",
     "prepare": "husky install"
   },
   "standard": {

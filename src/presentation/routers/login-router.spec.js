@@ -1,5 +1,6 @@
 const LoginRouter = require('./login-router')
-const { MissingParamError, InvalidParamError, UnauthorizedError, ServerError } = require('../errors')
+const { UnauthorizedError, ServerError } = require('../errors')
+const { MissingParamError, InvalidParamError } = require('../../util/errors')
 
 const makeSut = () => {
   // mock - Spy, captura valores e faz comparações

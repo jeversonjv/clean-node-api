@@ -76,8 +76,16 @@ const makeUpdateAccessTokenRepository = () => {
       this.accessToken = accessToken
     }
   }
-  const updateAccessTokenRepositorySpy = new UpdateAccessTokenRepositorySpy()
-  return updateAccessTokenRepositorySpy
+  return new UpdateAccessTokenRepositorySpy()
+}
+
+const makeUpdateAccessTokenRepositoryWithError = () => {
+  class UpdateAccessTokenRepositorySpy {
+    async update () {
+      throw new Error()
+    }
+  }
+  return new UpdateAccessTokenRepositorySpy()
 }
 
 const makeSut = () => {
@@ -165,6 +173,7 @@ describe('Auth UseCase', () => {
   test('Should throw if invalid dependecies are provided', async () => {
     const loadUserByEmailRepository = makeLoadUserByEmailRepository()
     const encrypter = makeEncrypter()
+    const tokenGenerator = makeTokenGenerator()
 
     const suts = [].concat(
       new AuthUseCase(),
@@ -191,8 +200,21 @@ describe('Auth UseCase', () => {
         loadUserByEmailRepository,
         encrypter,
         tokenGenerator: {}
+      }),
+      new AuthUseCase({
+        loadUserByEmailRepository,
+        encrypter,
+        tokenGenerator,
+        updateAccessTokenRepository: null
+      }),
+      new AuthUseCase({
+        loadUserByEmailRepository,
+        encrypter,
+        tokenGenerator,
+        updateAccessTokenRepository: {}
       })
     )
+    expect.assertions(suts.length)
     for (const sut of suts) {
       expect(sut.auth('any_email@mail.com', 'any_password')).rejects.toThrow()
     }
@@ -201,6 +223,7 @@ describe('Auth UseCase', () => {
   test('Should throw if any dependecies throws', async () => {
     const loadUserByEmailRepository = makeLoadUserByEmailRepository()
     const encrypter = makeEncrypter()
+    const tokenGenerator = makeTokenGenerator()
 
     const suts = [].concat(
       new AuthUseCase({
@@ -214,8 +237,15 @@ describe('Auth UseCase', () => {
         loadUserByEmailRepository,
         encrypter,
         tokenGenerator: makeTokenGeneratorWithError()
+      }),
+      new AuthUseCase({
+        loadUserByEmailRepository,
+        encrypter,
+        tokenGenerator,
+        updateAccessTokenRepository: makeUpdateAccessTokenRepositoryWithError()
       })
     )
+    expect.assertions(suts.length)
     for (const sut of suts) {
       expect(sut.auth('any_email@mail.com', 'any_password')).rejects.toThrow()
     }

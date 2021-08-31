@@ -30,29 +30,18 @@ describe('UpdateAccessTokenRepository', () => {
   })
 
   const makeSut = () => {
-    const userModel = db.collection('users')
-    const sut = new UpdateAccessTokenRepository(userModel)
-    return {
-      userModel,
-      sut
-    }
+    return new UpdateAccessTokenRepository()
   }
 
   test('Should update the user with the given AccessToken', async () => {
-    const { userModel, sut } = makeSut()
+    const sut = makeSut()
     await sut.update(fakeUserId, 'valid_token')
-    const updatedFakeUser = await userModel.findOne({ _id: fakeUserId })
+    const updatedFakeUser = await db.collection('users').findOne({ _id: fakeUserId })
     expect(updatedFakeUser.accessToken).toBe('valid_token')
   })
 
-  test('Should throw if no userModel is provided', async () => {
-    const sut = new UpdateAccessTokenRepository()
-    const promise = sut.update(fakeUserId, 'valid_token')
-    expect(promise).rejects.toThrow()
-  })
-
   test('Should throw if no params are provided', async () => {
-    const { sut } = makeSut()
+    const sut = makeSut()
     expect(sut.update()).rejects.toThrow(new MissingParamError('userId'))
     expect(sut.update(fakeUserId)).rejects.toThrow(new MissingParamError('accessToken'))
   })

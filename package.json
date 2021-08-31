@@ -5,7 +5,7 @@
   "main": "src/main/index.js",
   "scripts": {
     "start": "node src/main/index.js",
-    "test": "jest --passWithNoTests --runInBand",
+    "test": "jest --passWithNoTests --runInBand --noStackTrace",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm test -- --findRelatedTests",
